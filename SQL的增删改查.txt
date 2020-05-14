@@ -1,0 +1,121 @@
+## 表 table
+```
+create table rzdata(
+id int AUTO_INCREMENT primary key,
+
+stu_num int,
+stu_name varchar(100),
+stu_age int,
+
+createtime timestamp default current_timestamp,
+createuser varchar(100),
+updatetime timestamp default current_timestamp on update current_timestamp,
+updateuser varchar(100)
+);
+insert into ruozedata.rzdata(stu_num,stu_name,stu_age,createuser,updateuser) 
+values(110,'jepson',18,'j','r');
+insert into ruozedata.rzdata(stu_num,stu_name,stu_age,createuser,updateuser) 
+values(111,'dashu',23,'j','r');
+insert into ruozedata.rzdata(stu_num,stu_name,stu_age,createuser,updateuser) 
+values(112,'adang',24,'j','j');
+
+insert into ruozedata.rzdata(stu_num,stu_name,stu_age,createuser,updateuser) 
+values(113,'yusheng',19,'j','j');
+insert into ruozedata.rzdata(stu_num,stu_name,stu_age,createuser,updateuser) 
+values(115,'xiao7',19,'j','j');
+
+
+insert into ruozedata.rzdata
+values(10,110,'jepson',18,'2019-01-27 12:00:00','j','2019-01-27 12:00:00','r');
+
+```
+
+## #SQL 错误 [1136] [21S01]: Column count doesn't match value count at row 1 '
+
+```
+update ruozedata.rzdata set stu_age=22 ;
+update ruozedata.rzdata set stu_age=26 where id=1;
+update ruozedata.rzdata set stu_age=13 , createuser='huhu'; 
+update ruozedata.rzdata set stu_age=13 , createuser='huhuhuhu' 
+where id=2 and stu_num=110; #且 取交集
+
+update ruozedata.rzdata set stu_age=13 , createuser='huhuhuhu' 
+where id=2 or stu_num=110; #或 取并集
+
+delete from ruozedata.rzdata; 
+delete from ruozedata.rzdata where stu_num=110;
+
+
+select * from ruozedata.rzdata;
+select id,stu_name from ruozedata.rzdata;
+select id,stu_name from ruozedata.rzdata where stu_age=18;
+select * from ruozedata.rzdata where stu_age=18;
+#假设你只想取 stu_name，stu_age两列 ，但是你的SQL是* 所有字段 这样会有额外的开销
+
+
+#1.id 自增长 （AUTO_INCREMENT ）
+#2.createtime createuser updatetime updateuser
+#生产上 建
+#createtime cretime ctime cre_time create_time
+#orderno order_no ordernum orderid
+#两张表 order_no=orderid
+#3.字段名称不允许中文 中文的汉语拼音 建字段
+
+#约束: 
+#主键约束 primary key 一张表 只能1个主键，但是可以1个或 多个字段组成联合主键
+# primary key = unique+not null
+
+#唯一约束 unique
+#非空约束 not null
+#默认约束
+
+drop table ruozedata.rzdata;
+CREATE TABLE `rzdata` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`stu_num` int(11) DEFAULT NULL,
+`stu_name` varchar(100) DEFAULT NULL,
+`stu_age` int(11) DEFAULT NULL,
+`createtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`createuser` varchar(100) DEFAULT NULL,
+`updatetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+`updateuser` varchar(100) DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+#条件查询 where and or
+select * from ruozedata.rzdata;
+select id,stu_name from ruozedata.rzdata where stu_age=18;
+select * from ruozedata.rzdata where stu_age=18 and stu_name='jepson';
+select * from ruozedata.rzdata where stu_age=24 or stu_name='jepson';
+select * from ruozedata.rzdata where stu_age=24 and (stu_num=110 and stu_name='jepson')
+(stu_num=110 and stu_name='jepson'): 第1行
+stu_age=24 : 第3行
+
+select * from ruozedata.rzdata where stu_age=24 or (stu_num=110 and stu_name='jepson')
+
+select * from ruozedata.rzdata where stu_age>18;
+
+#模糊查询 like 
+select * from ruozedata.rzdata ;
+select * from ruozedata.rzdata where stu_name like '%n%';
+select * from ruozedata.rzdata where stu_name like 'j%';
+select * from ruozedata.rzdata where stu_name like '%u';
+select * from ruozedata.rzdata where stu_name like '__s%'; #占位符_ 第三个字母s
+
+#排序order by 
+select * from ruozedata.rzdata ;
+select * from ruozedata.rzdata order by stu_age;
+select * from ruozedata.rzdata order by stu_age asc;
+select * from ruozedata.rzdata order by stu_age desc;
+按年龄升序 学号降序
+select * from ruozedata.rzdata order by stu_age asc,stu_num desc;
+
+#限制多少行 limit 行数
+select * from ruozedata.rzdata limit 2;
+select * from ruozedata.rzdata order by stu_age asc limit 2;
+select * from ruozedata.rzdata order by stu_age asc,id asc limit 2;
+
+delete from ruozedata.rzdata where id=5
+
+```
